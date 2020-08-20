@@ -1,0 +1,48 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    font-family: 'Noto Sans CJK JP';
+}
+#canvas {
+    border: 1px solid #e0e0e0;
+    margin: 10px auto 0;
+    width: 1000px;
+    height: 800px;
+    background: #F3F7F6;
+}
+#info {
+    width: 1000px;
+    left: calc(50% - 490px);
+    top: 80px;
+    position: absolute;
+    font-size: 14px;
+    pointer-events: none;
+}
+#info b {
+    font-family: 'Noto Sans CJK JP';
+}
+#tools {
+    margin: 10px auto 0;
+    width: 510px;
+    left: calc(50% - 490px);
+    top: 30px;
+}
+#tools .joint-toolbar {
+    background: transparent;
+}
+#tools output {
+    margin-left: 10px;
+}
+#tools input {
+    width: 300px;
+}
+#tools button {
+    border-radius: 30px;
+    padding: 0 1em;
+    font-family: 'Noto Sans CJK JP';
+}
+#tools .joint-widget {
+    margin-right: 20px;
+    background: transparent;
+}

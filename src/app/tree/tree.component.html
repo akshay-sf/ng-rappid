@@ -1,0 +1,147 @@
+<div class="action-container">
+  <div class="mat-menu-container">
+    <button
+      mat-button
+      [matMenuTriggerFor]="elements"
+      [disabled]="!nodeSelected"
+    >
+      Add element
+    </button>
+    <button
+      mat-button
+      color="warn"
+      [disabled]="
+        !nodeSelected ||
+        nodeSelected?.attributes.linkedAttrs.contentType ===
+          formTypes.ApplicationForm
+      "
+      (click)="removeElement(nodeSelected)"
+    >
+      Delete
+    </button>
+
+    <mat-form-field [ngStyle]="{ 'padding-left': '1rem' }">
+      <mat-select
+        disabled
+        value="R"
+        (selectionChange)="onDirectionChange($event)"
+      >
+        <mat-option *ngFor="let dir of directions" [value]="dir.value">{{
+          dir.label
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <span [ngStyle]="{'padding-left': '1rem'}">
+      <mat-slider
+        thumbLabel
+        tickInterval="5"
+        step="10"
+        min="10"
+        max="300"
+        [(ngModel)]="sliderValue"
+      ></mat-slider>
+    </span>
+
+    <!-- Menu -->
+    <mat-menu #elements="matMenu">
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="components"
+        [disabled]="
+          nodeSelected?.attributes.linkedAttrs.contentType !==
+          formTypes.ApplicationForm
+        "
+      >
+        Components
+      </button>
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="resources"
+        [disabled]="
+          nodeSelected?.attributes.linkedAttrs.contentType ===
+          formTypes.ApplicationForm
+        "
+      >
+        Resources
+      </button>
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="lifecycle"
+        [disabled]="
+          nodeSelected?.attributes.linkedAttrs.contentType ===
+          formTypes.ApplicationForm
+        "
+      >
+        Lifecycle
+      </button>
+      <button
+        mat-menu-item
+        [matMenuTriggerFor]="pre_configured"
+        [disabled]="
+          nodeSelected?.attributes.linkedAttrs.contentType ===
+          formTypes.ApplicationForm
+        "
+      >
+        Pre-Configured Bundles
+      </button>
+    </mat-menu>
+
+    <mat-menu #components="matMenu">
+      <button mat-menu-item (click)="addElement(formTypes.RoleForm)">
+        Role
+      </button>
+    </mat-menu>
+
+    <mat-menu #resources="matMenu">
+      <button mat-menu-item (click)="addElement(formTypes.ImageForm)">
+        Image
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.ComputeForm)">
+        Compute
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.StorageForm)">
+        Storage
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.ServicesForm)">
+        Services
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.VolumesForm)">
+        Volume
+      </button>
+    </mat-menu>
+
+    <mat-menu #lifecycle="matMenu">
+      <button mat-menu-item (click)="addElement(formTypes.VNodeHooksForm)">
+        V-Node Hooks
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.SidecarsForm)">
+        Side Cars
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.InitContainerForm)">
+        Init Container
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.ProbingForm)">
+        Probing
+      </button>
+    </mat-menu>
+
+    <mat-menu #pre_configured="matMenu">
+      <button mat-menu-item (click)="addElement(formTypes.RedisForm)">
+        Redis
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.NginxForm)">
+        Nginx
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.MysqlForm)">
+        MySQL
+      </button>
+      <button mat-menu-item (click)="addElement(formTypes.MinioForm)">
+        MiniIO
+      </button>
+    </mat-menu>
+  </div>
+</div>
+<div [ngStyle]="{ width: '100%', height: 'calc(100vh - 100px)' }">
+  <div class="canvas" #canvas></div>
+</div>

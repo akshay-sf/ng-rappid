@@ -1,18 +1,33 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule } from "@angular/core";
+import {
+  MatButtonModule,
+  MatMenuModule,
+  MatSelectModule,
+  MatSliderModule,
+} from "@angular/material";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { CollapsibleComponent } from "./collapsible/collapsible.component";
+import { TreeComponent } from "./tree/tree.component";
+import { TreeService } from "./tree/tree.service";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent, CollapsibleComponent, TreeComponent],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatSliderModule,
+    FormsModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [TreeService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
