@@ -111,10 +111,11 @@ const AppNode = dia.Element.define(
       },
       nodeError: {
         width: 12,
-        refX: 158,
-        refY: 50,
+        refX: 75,
+        refY: 3,
         xlinkHref: "assets/warning.svg",
         cursor: "pointer",
+        display: "none",
       },
       appNameWrapper: {
         refX2: 6.5,
