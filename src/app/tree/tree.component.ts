@@ -115,9 +115,9 @@ export class TreeComponent implements OnInit, AfterViewInit {
 
     this.graph.addCell(appNode);
 
-    setTimeout(() => {
-      this.addElement("role", appNode as dia.Element & ExtendedStaticMethods);
-    });
+    // setTimeout(() => {
+    //   this.addElement("role", appNode as dia.Element & ExtendedStaticMethods);
+    // });
   }
 
   ngAfterViewInit() {

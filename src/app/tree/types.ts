@@ -56,7 +56,7 @@ export interface ResourceItem {
   name: string;
   type: ResourceType;
   label: string;
-  height?: number;
+  size?: { height: number; width: number };
   contentType?: FormType;
   imgSrc?: string;
   contents?: ResourceItem[];

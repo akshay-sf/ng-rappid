@@ -17,6 +17,7 @@ export const resourceList: ResourceList = {
     contentType: FormType.RoleForm,
     imgSrc: "assets/role.svg",
     allowedSources: [FormType.ApplicationForm],
+    size: { height: 36, width: 36 },
   },
   image: {
     id: "image",
@@ -27,6 +28,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/image.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   compute: {
     id: "compute",
@@ -37,6 +39,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/compute.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   storage: {
     id: "storage",
@@ -47,6 +50,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/HDD.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   services: {
     id: "services",
@@ -57,6 +61,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/services.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   volumes: {
     id: "volume",
@@ -67,6 +72,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/volume.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   vNodeHooks: {
     id: "vNodeHooks",
@@ -77,6 +83,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/vnodehook.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   sidecars: {
     id: "sideCars",
@@ -87,6 +94,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/sidecar.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   initContainer: {
     id: "initContainer",
@@ -97,6 +105,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/init-container.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   probing: {
     id: "probing",
@@ -107,6 +116,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/probing.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   redis: {
     id: "redis",
@@ -117,6 +127,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/redis.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   nginx: {
     id: "nginx",
@@ -127,6 +138,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/nginx.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   mysql: {
     id: "mysql",
@@ -137,6 +149,7 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/mysql.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
   minio: {
     id: "miniio",
@@ -147,5 +160,6 @@ export const resourceList: ResourceList = {
     imgSrc: "assets/minio.svg",
     isOnlyLeafView: true,
     allowedSources: [FormType.RoleForm],
+    size: { height: 24, width: 24 },
   },
 };

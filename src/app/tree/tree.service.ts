@@ -3,7 +3,7 @@ import { dia, shapes, ui, layout, g } from "@clientio/rappid";
 import "./tree.shapes";
 import { ExtendedStaticMethods } from "./tree.shapes";
 import { isFunction } from "lodash";
-import { ResourceItem, Direction } from "./types";
+import { ResourceItem, Direction, FormType } from "./types";
 
 export enum ToggleTooltip {
   EXPAND = "Expand all",
@@ -92,7 +92,7 @@ export class TreeService {
       // No documentation provided on site.
       updateAttributes: (_, model: dia.Element & ExtendedStaticMethods) => {
         // Update some presentation attributes during the layout
-        model.toggleCollapseVisibility(!graph.isSink(model), graph);
+        model.toggleCollapseVisibility(!graph.isSink(model));
         // Check if appNode and apply collapse behavior on both sides.
         model.toggleCollapseSign(
           !model.isCollapsed(this.appNodeCollapseType),
@@ -124,6 +124,20 @@ export class TreeService {
           ry: 40,
         },
       },
+      // Restrict the dragging behavior for role node.
+      canInteract: (elem) => {
+        // elem is actually ElementView but typed as Element
+        const element: dia.Element = (elem as any).model;
+        if (
+          element.attributes.linkedAttrs &&
+          element.attributes.linkedAttrs.contentType === FormType.RoleForm
+        ) {
+          return false;
+        }
+        return true;
+      },
+      // Restrict connections depending upon linked attrs.
+      validateConnection: this.validateConnections,
     });
     return treeView;
   }
@@ -177,6 +191,7 @@ export class TreeService {
       attrs: {
         resourceIcon: {
           xlinkHref: linkedAttrs.imgSrc,
+          ...linkedAttrs.size,
         },
         labelText: {
           text: linkedAttrs.label,
@@ -191,5 +206,61 @@ export class TreeService {
       linkedAttrs,
     });
     return member as dia.Element & ExtendedStaticMethods;
+  }
+
+  validateConnections(element: dia.Element, candidate: dia.Element) {
+    const sourceLinkedAttributes: ResourceItem =
+      candidate.attributes.linkedAttrs;
+    const targetLinkedAttributes: ResourceItem = element.attributes.linkedAttrs;
+
+    /**
+     * App element cannot be target to any of the source.
+     */
+    if (targetLinkedAttributes.contentType === FormType.ApplicationForm) {
+      return false;
+    }
+
+    /**
+     * If the source view doesn't include the contentType from allowedTargets.
+     */
+    if (
+      sourceLinkedAttributes.allowedTargets &&
+      !sourceLinkedAttributes.allowedTargets.includes(
+        targetLinkedAttributes.contentType,
+      )
+    ) {
+      return false;
+    }
+
+    /**
+     * If the target view doesn't include the contentType from allowedSources
+     */
+    if (
+      targetLinkedAttributes.allowedSources &&
+      !targetLinkedAttributes.allowedSources.includes(
+        sourceLinkedAttributes.contentType,
+      )
+    ) {
+      return false;
+    }
+
+    /**
+     * If the source is leaf node, then it won't connect to any other node.
+     * eg. Lifecycle/Resource components can't connect to self types.
+     */
+    if (sourceLinkedAttributes.isOnlyLeafView) {
+      return false;
+    }
+
+    /**
+     * Same type elements can't connect to each other.
+     * eg. Role can't connect to another role.
+     */
+    if (
+      sourceLinkedAttributes.contentType === targetLinkedAttributes.contentType
+    ) {
+      return false;
+    }
+    return true;
   }
 }

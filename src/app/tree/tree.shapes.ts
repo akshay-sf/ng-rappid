@@ -27,7 +27,7 @@ export interface ExtendedStaticMethods {
   setTitle: (title: string) => void;
   toggleCollapsePosition?: () => void;
   toggleCollapseSign: (plus: boolean, direction: Direction) => void;
-  toggleCollapseVisibility: (visible: boolean, graph: dia.Graph) => void;
+  toggleCollapseVisibility: (visible: boolean) => void;
   /**
    * Private function for internal use only. Use `toggleCollapseVisibility` instead.
    * @note Only AppNode have this method.
@@ -306,11 +306,11 @@ const AppNode = dia.Element.define(
       return !!collapsed;
     },
 
-    async toggleCollapseVisibility(visible: boolean, graph: dia.Graph) {
+    async toggleCollapseVisibility() {
       // If visible is true, then the appNode is no longer the leaf node.
       const self = this as dia.Element & ExtendedStaticMethods;
-      self._toggleLeftCollapseVisibility(graph);
-      self._toggleRightCollapseVisibility(graph);
+      self._toggleLeftCollapseVisibility(self.graph);
+      self._toggleRightCollapseVisibility(self.graph);
     },
 
     async _toggleLeftCollapseVisibility(graph: dia.Graph) {
@@ -387,11 +387,15 @@ const Element = dia.Element.define(
         refWidth: "100%",
         refHeight: "100%",
         fill: "transparent",
-        // stroke: "#9C9C9C",
+      },
+      line: {
+        d: "m 0 45 h 80",
+        stroke: "#9C9C9C",
+        strokeWidth: 1,
       },
       resourceWrapper: {
         refX: 23,
-        refY: 5,
+        refY: 18,
         fill: "#fff",
         stroke: "#9C9C9C",
       },
@@ -404,12 +408,13 @@ const Element = dia.Element.define(
       resourceBodyCircle: {
         cx: 31,
         cy: 25,
-        r: 30,
+        r: 25,
         display: "none",
       },
       resourceIcon: {
-        height: 35,
-        width: 35,
+        // Dynamic values.
+        // Height: 36/24
+        // Width: 36/24
         refX: 14,
         refY: 7,
       },
@@ -431,9 +436,18 @@ const Element = dia.Element.define(
       collapseButtonIcon: {
         ...collapse.buttonIcon,
       },
+      toggleError: {
+        width: 11,
+        refX: 5,
+        refY: 4,
+        xlinkHref: "assets/warning.svg",
+        cursor: "pointer",
+        display: "none",
+        event: "element:collapse",
+      },
       labelWrapper: {
         refX: 5,
-        refY: 65,
+        refY: 73,
         fill: "#EBEBEB",
       },
       labelBody: {
@@ -474,6 +488,10 @@ const Element = dia.Element.define(
         selector: "body",
       },
       {
+        tagName: "path",
+        selector: "line",
+      },
+      {
         tagName: "g",
         selector: "resourceWrapper",
         children: [
@@ -512,6 +530,10 @@ const Element = dia.Element.define(
           {
             tagName: "path",
             selector: "collapseButtonIcon",
+          },
+          {
+            tagName: "image",
+            selector: "toggleError",
           },
           {
             tagName: "title",
@@ -566,30 +588,87 @@ const Element = dia.Element.define(
     },
 
     toggleCollapseVisibility(visible: boolean) {
-      this.attr("collapseButton", { display: visible ? "block" : "none" });
+      const self = this as dia.Element;
+      const direction = self.get(ElementAttrs.DIRECTION);
+      self.attr({
+        collapseButton: { display: visible ? "block" : "none" },
+        /**
+         * If the collapse/expand button is visible,
+         * expand the line to the end of element.
+         */
+        ...(visible
+          ? {
+              line: {
+                d:
+                  direction === Direction.LEFT
+                    ? "m 110 45 h -110"
+                    : // Draw the path to the opposite direction.
+                      "m 0 45 h 110",
+              },
+            }
+          : {
+              /**
+               * If the collapse/expand button is hidden,
+               * line path to the end of elem needs to be reduced.
+               */
+              line: {
+                d:
+                  direction === Direction.LEFT
+                    ? "m 110 45 h -80"
+                    : // Draw the path to the opposite direction.
+                      "m 0 45 h 80",
+              },
+            }),
+      });
     },
 
     toggleCollapseSign(plus) {
+      const self = this as dia.Element;
+      const error = self.graph
+        .getElements()
+        .filter((elem: dia.Element & ExtendedStaticMethods) => elem.isError());
       if (!plus) {
-        this.attr("collapseButtonIcon", {
-          d: this.PLUS_SIGN,
-          strokeWidth: 1.6,
+        if (!error.length) {
+          self.attr({
+            collapseButtonIcon: {
+              display: "block",
+              d: this.PLUS_SIGN,
+              strokeWidth: 1.6,
+            },
+            toggleError: { display: "none" },
+            collapseTooltip: { text: "Expand all" },
+          });
+          return;
+        }
+        self.attr({
+          toggleError: { display: "block" },
+          collapseButtonIcon: { display: "none" },
+          collapseTooltip: { text: "Something went wrong!" },
         });
       } else {
-        this.attr("collapseButtonIcon", {
-          d: this.MINUS_SIGN,
-          strokeWidth: 1.8,
+        self.attr({
+          collapseButtonIcon: {
+            display: "block",
+            d: this.MINUS_SIGN,
+            strokeWidth: 1.8,
+          },
+          toggleError: { display: "none" },
+          collapseTooltip: { text: "Collapse all" },
         });
       }
     },
 
     toggleCollapsePosition() {
-      const self = this as dia.Element;
+      const self = this as dia.Element & ExtendedStaticMethods;
       const direction = self.get(ElementAttrs.DIRECTION);
       if (direction === Direction.LEFT) {
-        self.attr("collapseButton", { refX: 0, refX2: 0 });
+        self.attr({
+          collapseButton: { refX: 0, refX2: 0 },
+        });
       } else if (direction === Direction.RIGHT) {
-        self.attr("collapseButton", { refX: "100%", refX2: -20 });
+        self.attr({
+          collapseButton: { refX: "100%", refX2: -20 },
+        });
       }
     },
 
@@ -600,7 +679,8 @@ const Element = dia.Element.define(
         self.attr({
           resourceBodyRect: { display: "none" },
           resourceBodyCircle: { display: "block" },
-          isError: { refX: 26, refY: 42 },
+          nodeError: { refX: 26, refY: 38 },
+          resourceIcon: { refX: 19, refY: 10 },
         });
       }
     },
