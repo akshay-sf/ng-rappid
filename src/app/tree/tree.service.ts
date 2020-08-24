@@ -171,7 +171,7 @@ export class TreeService {
           text: version,
         },
         tooltip: {
-          text: label,
+          text: `${label} - ${version}`,
         },
         leftCollapseTooltip: {
           text: ToggleTooltip.EXPAND,

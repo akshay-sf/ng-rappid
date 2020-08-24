@@ -84,23 +84,30 @@ const collapse: Record<string, attributes.SVGAttributes> = {
 const AppNode = dia.Element.define(
   "rao.AppNode",
   {
-    size: { width: 360, height: 64 },
+    size: { height: 165, width: 140 },
     attrs: {
       body: {
         refWidth: "100%",
         refHeight: "100%",
         fill: "transparent",
       },
-      appWrapper: {
-        refX2: +21.5,
+      logoWrapper: {
+        refX2: 25,
+        refY2: 40,
       },
-      appContainer: {
-        refHeight: "100%",
-        refWidth: "88%",
+      logoContainer: {
+        height: 75,
+        width: 90,
         fill: "#fff",
         stroke: "#9C9C9C",
-        rx: 40,
-        ry: 40,
+        rx: 6,
+        ry: 6,
+      },
+      appLogo: {
+        width: 48,
+        height: 48,
+        refX: 21,
+        refY: 14,
       },
       nodeError: {
         width: 12,
@@ -109,54 +116,51 @@ const AppNode = dia.Element.define(
         xlinkHref: "assets/warning.svg",
         cursor: "pointer",
       },
-      appLogo: {
-        width: 35,
-        refX: 30,
-        refY: 12,
+      appNameWrapper: {
+        refX2: 6.5,
+        refY2: 122,
       },
-      appNameLabel: {
-        refX: 85,
-        refY: 15,
-        fontFamily,
-        fontSize: 12,
-        lineHeight: 16,
-        fill: "#606060",
-        text: "Application Name",
+      appNameContainer: {
+        height: 46,
+        width: 127,
+        fill: "#EBEBEB",
       },
       appNameText: {
-        refX: 85,
-        refY: 31,
         fontFamily,
-        fontSize: 16,
+        fontSize: 14,
         lineHeight: 20,
-        fill: "#333333",
+        fill: "#000000",
         textWrap: {
           width: 120, // equivalent to 15 c
           maxLineCount: 1,
           ellipsis: true,
         },
-      },
-      appVersionLabel: {
-        refX: 237,
-        refY: 15,
-        fontFamily,
-        fontSize: 12,
-        lineHeight: 16,
-        fill: "#606060",
-        text: "Version",
+        // Center the text.
+        refX: "45%",
+        refY2: 6,
+        dominantBaseline: "middle",
+        textAnchor: "middle",
       },
       appVersionText: {
-        refX: 237,
-        refY: 31,
         fontFamily,
-        fontSize: 16,
-        lineHeight: 20,
-        fill: "#333333",
+        fontSize: 10,
+        lineHeight: 15,
+        fill: "#000000",
+        textWrap: {
+          width: 80, // equivalent to 10 characters
+          maxLineCount: 1,
+          ellipsis: true,
+        },
+        // Center the text.
+        refX: "45%",
+        refY2: 25,
+        dominantBaseline: "middle",
+        textAnchor: "middle",
       },
       leftCollapseButton: {
         ...collapse.button,
         refX: 0,
-        refX2: -22,
+        refX2: -1,
         refY: "50%",
         refY2: -10,
       },
@@ -170,7 +174,7 @@ const AppNode = dia.Element.define(
       },
       rightCollapseButton: {
         ...collapse.button,
-        refX2: -41,
+        refX2: -19,
         refY2: -10,
       },
       rightCollapseButtonBody: {
@@ -203,11 +207,15 @@ const AppNode = dia.Element.define(
       },
       {
         tagName: "g",
-        selector: "appWrapper",
+        selector: "logoWrapper",
         children: [
           {
             tagName: "rect",
-            selector: "appContainer",
+            selector: "logoContainer",
+          },
+          {
+            tagName: "image",
+            selector: "appLogo",
           },
           {
             tagName: "image",
@@ -219,21 +227,19 @@ const AppNode = dia.Element.define(
               },
             ],
           },
+        ],
+      },
+      {
+        tagName: "g",
+        selector: "appNameWrapper",
+        children: [
           {
-            tagName: "image",
-            selector: "appLogo",
-          },
-          {
-            tagName: "text",
-            selector: "appNameLabel",
+            tagName: "rect",
+            selector: "appNameContainer",
           },
           {
             tagName: "text",
             selector: "appNameText",
-          },
-          {
-            tagName: "text",
-            selector: "appVersionLabel",
           },
           {
             tagName: "text",
@@ -243,41 +249,41 @@ const AppNode = dia.Element.define(
             tagName: "title",
             selector: "tooltip",
           },
+        ],
+      },
+      {
+        tagName: "g",
+        selector: "leftCollapseButton",
+        children: [
           {
-            tagName: "g",
-            selector: "leftCollapseButton",
-            children: [
-              {
-                tagName: "rect",
-                selector: "leftCollapseButtonBody",
-              },
-              {
-                tagName: "path",
-                selector: "leftCollapseButtonIcon",
-              },
-              {
-                tagName: "title",
-                selector: "leftCollapseTooltip",
-              },
-            ],
+            tagName: "rect",
+            selector: "leftCollapseButtonBody",
           },
           {
-            tagName: "g",
-            selector: "rightCollapseButton",
-            children: [
-              {
-                tagName: "rect",
-                selector: "rightCollapseButtonBody",
-              },
-              {
-                tagName: "path",
-                selector: "rightCollapseButtonIcon",
-              },
-              {
-                tagName: "title",
-                selector: "rightCollapseTooltip",
-              },
-            ],
+            tagName: "path",
+            selector: "leftCollapseButtonIcon",
+          },
+          {
+            tagName: "title",
+            selector: "leftCollapseTooltip",
+          },
+        ],
+      },
+      {
+        tagName: "g",
+        selector: "rightCollapseButton",
+        children: [
+          {
+            tagName: "rect",
+            selector: "rightCollapseButtonBody",
+          },
+          {
+            tagName: "path",
+            selector: "rightCollapseButtonIcon",
+          },
+          {
+            tagName: "title",
+            selector: "rightCollapseTooltip",
           },
         ],
       },
@@ -424,6 +430,7 @@ const Element = dia.Element.define(
         refY: 3,
         xlinkHref: "assets/warning.svg",
         cursor: "pointer",
+        display: "none",
       },
       collapseButton: {
         ...collapse.button,
